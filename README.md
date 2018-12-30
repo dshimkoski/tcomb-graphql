@@ -6,7 +6,7 @@ Convert tcomb types to secure, executable GraphQL schemas *(WIP)*
 
 An npm package will be created once the code is more stable, but for now you'll have to clone this repo and `npm install`
 
-## [Example Output](examples/basic.js)
+## Basic Example [source](examples/basic.js)
 
 `node -r esm examples/basic`
 
