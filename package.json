@@ -1,0 +1,32 @@
+{
+  "name": "tcomb-graphql",
+  "version": "0.1.0",
+  "description": "Convert tcomb types to secure, executable GraphQL schemas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dshimkoski/tcomb-graphql.git"
+  },
+  "keywords": [
+    "tcomb",
+    "graphql"
+  ],
+  "author": "Denny Shimkoski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dshimkoski/tcomb-graphql/issues"
+  },
+  "homepage": "https://github.com/dshimkoski/tcomb-graphql#readme",
+  "dependencies": {
+    "deep-extend": "^0.6.0",
+    "esm": "^3.0.84",
+    "graphql": "^14.0.2",
+    "graphql-iso-date": "^3.6.1",
+    "graphql-middleware": "^1.7.3",
+    "graphql-shield": "^3.2.3",
+    "tcomb": "^3.2.27"
+  }
+}
