@@ -172,7 +172,7 @@ function object(type, GraphQLType) {
   type.gql = new GraphQLType({
     name: t.getTypeName(type),
     description: type.__typeDesc || type.__desc,
-    interfaces: type.interfaces && type.interfaces.map(i => transform(i)),
+    interfaces: type.interfaces && type.interfaces.map(i => transform(i, true)),
     fields: Object.entries(type.meta.props).reduce((fields, [prop, propType]) => {
       fields[prop] = {
         type: transform(propType),
@@ -335,6 +335,9 @@ export default class TCombGraphQLSchema {
     for (const [k, type] of Object.entries(mutations)) {
       this.mutations[k] = type
       if (type.__publishType) {
+        if (!this.subscriptions) {
+          this.subscriptions = {}
+        }
         this.subscriptions[k] = type.__publishType
       }
     }
@@ -432,7 +435,7 @@ export default class TCombGraphQLSchema {
     if (this.mutations) {
       config.mutation = transform(t.struct(this.mutations, 'Mutation'), true)
     }
-    if (this.subscription) {
+    if (this.subscriptions) {
       config.subscription = transform(t.struct(this.subscriptions, 'Subscription'), true)
     }
     const schema = new GraphQLSchema(config)

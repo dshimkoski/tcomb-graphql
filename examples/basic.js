@@ -3,7 +3,8 @@ import TCombGraphQLSchema, { arg, fn, type, input } from '..'
 
 const schema = new TCombGraphQLSchema()
 
-const Message = type('Message', null, { text: t.String })
+const Textable = t.interface({ text: t.String }, 'Textable')
+const Message = type('Message', null, { text: t.String }, Textable)
 const message = fn({ id: t.ID }, t.maybe(Message), null, 'Fetch a message by ID')
 const SendMessageInput = input('SendMessageInput', 'sendMessage input', { text: t.String })
 const SendMessageOutput = type('SendMessageOutput', 'sendMessage response', { sent: t.Boolean })
@@ -12,6 +13,11 @@ const sendMessage = fn({ input: SendMessageInput }, SendMessageOutput, messageSe
 
 schema.addMutations({ sendMessage })
 schema.addQueries({ message })
+schema.addResolvers({
+  Textable: {
+    __resolveType(data, ctx, info) {}
+  }
+})
 
 const Beep = type('Beep', 'A beep noise', { beepiness: t.Integer })
 const Boop = type('Boop', 'A boop noise', { boopiness: t.Integer })
