@@ -312,10 +312,10 @@ export function arg(Type, __val, __desc) {
  */
 export default class TCombGraphQLSchema {
   constructor() {
-    this.mutations = {}
-    this.queries = {}
+    this.mutations = null
+    this.queries = null
     this.resolvers = {}
-    this.subscriptions = {}
+    this.subscriptions = null
     this.shield = null
   }
 
@@ -329,6 +329,9 @@ export default class TCombGraphQLSchema {
    *     schema.addMutations({ sendMessage })
    */
   addMutations(mutations) {
+    if (!this.mutations) {
+      this.mutations = {}
+    }
     for (const [k, type] of Object.entries(mutations)) {
       this.mutations[k] = type
       if (type.__publishType) {
@@ -349,6 +352,9 @@ export default class TCombGraphQLSchema {
    *     })
    */
   addQueries(queries) {
+    if (!this.queries) {
+      this.queries = {}
+    }
     for (const [k, type] of Object.entries(queries)) {
       this.queries[k] = type
     }
@@ -401,7 +407,7 @@ export default class TCombGraphQLSchema {
     if (adapt) {
       adapt(schema)
     }
-    return query => graphql(schema, query)
+    return (...args) => graphql(schema, ...args)
   }
 
   /**
@@ -419,12 +425,18 @@ export default class TCombGraphQLSchema {
    * @return {Object} GraphQL schema
    */
   toGraphQL() {
-    const schema = new GraphQLSchema({
-      query: transform(t.struct(this.queries, 'Query'), true),
-      mutation: transform(t.struct(this.mutations, 'Mutation'), true),
-      subscription: transform(t.struct(this.subscriptions, 'Subscription'), true)
-    })
-    addResolveFunctionsToSchema({schema, resolvers: this.resolvers})
+    const config = {}
+    if (this.queries) {
+      config.query = transform(t.struct(this.queries, 'Query'), true)
+    }
+    if (this.mutations) {
+      config.mutation = transform(t.struct(this.mutations, 'Mutation'), true)
+    }
+    if (this.subscription) {
+      config.subscription = transform(t.struct(this.subscriptions, 'Subscription'), true)
+    }
+    const schema = new GraphQLSchema(config)
+    addResolveFunctionsToSchema({ schema, resolvers: this.resolvers })
     return this.shield ? applyMiddleware(schema, shield(this.shield, {
       fallback: 'Permission denied'
     })) : schema
