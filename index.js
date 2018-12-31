@@ -127,6 +127,7 @@ function maybe(type) {
  * @return {Object} GraphQL interface
  */
 function inter(type) {
+  // TODO implement resolveType
   return object(type, GraphQLInterfaceType)
 }
 
