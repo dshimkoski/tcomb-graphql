@@ -2,7 +2,7 @@ import t from 'tcomb'
 import TCombGraphQLSchema, { fn } from '..'
 import { rule } from 'graphql-shield'
 
-export const isAuthenticated = rule()((parent, args, ctx, info) => {
+const isAuthenticated = rule()((parent, args, ctx, info) => {
   return !!ctx.user
 })
 
