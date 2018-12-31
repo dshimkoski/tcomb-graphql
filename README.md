@@ -20,7 +20,7 @@ type Boop {
 
 union BotNoise = Beep | Boop
 
-type Message {
+type Message implements Textable {
   text: String!
 }
 
@@ -52,6 +52,10 @@ type Subscription {
     """optionally limit to particular User ID"""
     toId: ID
   ): Message!
+}
+
+interface Textable {
+  text: String!
 }
 
 {"data":{"message":null,"botNoises":[{"boopiness":20}]}}
