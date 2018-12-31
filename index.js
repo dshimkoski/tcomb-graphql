@@ -122,12 +122,13 @@ function maybe(type) {
 /**
  * Transform interface
  *
+ * Application must implement resolveType
+ *
  * @param {Object} type - tcomb interface
  *
  * @return {Object} GraphQL interface
  */
 function inter(type) {
-  // TODO implement resolveType
   return object(type, GraphQLInterfaceType)
 }
 
