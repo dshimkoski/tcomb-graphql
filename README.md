@@ -59,3 +59,21 @@ type Subscription {
 
 {"data":{"message":null,"botNoises":[{"boopiness":20}]}}
 ```
+
+## Secure Example [source](examples/secure.js)
+
+`node -r esm examples/secure`
+
+```graphql
+
+type Query {
+  randomInt: RandomInt!
+}
+
+type RandomInt {
+  int: Int!
+}
+
+{"errors":[{"message":"Permission denied","locations":[{"line":2,"column":3}],"path":["randomInt"]}],"data":null}
+{"data":{"randomInt":{"int":25}}}
+```
