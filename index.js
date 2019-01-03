@@ -396,7 +396,7 @@ export default class TCombGraphQLSchema {
   }
 
   /**
-   * Create executable GraphQL schema
+   * Create query function
    *
    * @param {function} adapt - modify schema
    *
@@ -408,10 +408,7 @@ export default class TCombGraphQLSchema {
    *     exec(exampleQuery).then(...)
    */
   compile(adapt) {
-    const schema = this.toGraphQL()
-    if (adapt) {
-      adapt(schema)
-    }
+    const schema = this.toGraphQL(adapt)
     return (...args) => graphql(schema, ...args)
   }
 
@@ -425,11 +422,17 @@ export default class TCombGraphQLSchema {
   }
 
   /**
-   * Convert to GraphQL schema
+   * Create executable GraphQL schema
+   *
+   * @param {function} adapt - modify schema
    *
    * @return {Object} GraphQL schema
+   *
+   * @example
+   *
+   *     schema.toGraphQL(joinMonsterAdapter)
    */
-  toGraphQL() {
+  toGraphQL(adapt) {
     const config = {}
     if (this.queries) {
       config.query = transform(t.struct(this.queries, 'Query'), true)
@@ -441,9 +444,15 @@ export default class TCombGraphQLSchema {
       config.subscription = transform(t.struct(this.subscriptions, 'Subscription'), true)
     }
     const schema = new GraphQLSchema(config)
+    if (this.shield) {
+      applyMiddleware(schema, shield(this.shield, {
+        fallback: 'Permission denied'
+      }))
+    }
     addResolveFunctionsToSchema({ schema, resolvers: this.resolvers })
-    return this.shield ? applyMiddleware(schema, shield(this.shield, {
-      fallback: 'Permission denied'
-    })) : schema
+    if (adapt) {
+      adapt(schema)
+    }
+    return schema
   }
 }
