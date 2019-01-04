@@ -444,12 +444,12 @@ export default class TCombGraphQLSchema {
       config.subscription = transform(t.struct(this.subscriptions, 'Subscription'), true)
     }
     const schema = new GraphQLSchema(config)
+    addResolveFunctionsToSchema({ schema, resolvers: this.resolvers })
     if (this.shield) {
       applyMiddleware(schema, shield(this.shield, {
         fallback: 'Permission denied'
       }))
     }
-    addResolveFunctionsToSchema({ schema, resolvers: this.resolvers })
     if (adapt) {
       adapt(schema)
     }
